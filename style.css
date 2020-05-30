@@ -1,0 +1,20 @@
+/*设置整体样式*/
+/*文本、图片等等都居中显示*/
+body {
+    background-image: url(" /image/background_image.jpg");
+    color: black;
+    text-align: center;
+}
+
+/*设置整个页面的样式：使用flex来对该div实现其内部的div都为居中，按照行进行排列*/
+.container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*设置头部样式*/
+/*保证该div与下一个div相距离20px,并且设置字体大小为3rem,字体颜色为黑色*/
+.header{
+
+}
