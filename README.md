@@ -74,3 +74,112 @@
    </body>
    </html>
 ```
+### 2.3、CSS样式设置
+```CSS
+/*设置整体样式*/
+   /*文本、图片等等都居中显示*/
+   body {
+       background-color: #fe9801;
+       color: black;
+       text-align: center;
+   }
+   
+   /*设置整个页面的样式：使用flex来对该div实现其内部的div都为居中，按照行进行排列*/
+   .container {
+       display: flex;
+       flex-direction: column;
+       align-items: center;
+   }
+   
+   /*设置头部样式*/
+   /*保证该div与下一个div相距离20px,并且设置字体大小为3rem,字体颜色为黑色*/
+   .heading {
+       margin-bottom: 20px;
+       font-size: 3rem;
+       color: black;
+   }
+   
+   /*设置头部部分的div都以flex进行分布*/
+   /*同时设置各个div为居中对齐*/
+   .header {
+       display: flex;
+       align-items: center;
+   }
+   
+   /*因为CPM、WPM、精确度和剩余时间都是一样的展示，所以这里的样式设置都是一样的*/
+   .timer, .errors, .accuracy, .cpm, .wpm {
+       background-color: #ccda46;
+       height: 60px;
+       width: 70px;
+       margin: 8px;
+       padding: 12px;
+       border-radius: 20%;
+       box-shadow: black 5px 8px 5px;
+   }
+   
+   
+   .cpm, .wpm {
+       display: none;
+   }
+   
+   .header-text {
+       /*将文本文字转化为大写*/
+       text-transform: uppercase;
+       font-size: 0.6rem;
+       font-weight: 600;
+   }
+   
+   .curr_time, .curr_errors, .curr_accuracy, .curr_cpm, .curr_wpm {
+       font-size: 2.75rem;
+   }
+   
+   .quote {
+       background-color: #ccda46;
+       font-size: 1.5rem;
+       margin: 10px;
+       padding: 25px;
+       box-shadow: black 5px 8px 5px;
+   }
+   
+   .input_area {
+       background-color: #f5f5c6;
+       height: 80px;
+       width: 40%;
+       font-size: 1.5rem;
+       font-width: 600;
+       margin: 15px;
+       padding: 20px;
+       border: 0;
+       box-shadow: black 5px 8px 5px;
+   }
+   
+   .restart_btn {
+       display: none;
+       background-color: #326765;
+       font-size: 1.5rem;
+       padding: 10px;
+       border: 0;
+       box-shadow:black 5px 8px 5px;
+   }
+   
+   .incorrect_char{
+       color:red;
+       text-decoration: underline;
+   }
+   
+   .correct_char{
+       color:darkgreen;
+   }
+```
+
+### 2.4、业务逻辑设置
+>选择所有元素并定义 <br>
+使用querySelector()方法选择HTML布局中的必须元素。并为它们分配变量，<br>
+>以便可以轻松访问和修改它们。开头还将定义在整个程序中将要访问的其他变量。
+```javascript
+// 设置时间限制
+let TIME_LIMIT = 60;
+
+
+
+```
