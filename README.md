@@ -299,7 +299,6 @@ function startGame() {
   resetValues(); 
   updateQuote(); 
 
-  // clear old and start a new timer 
   clearInterval(timer); 
   timer = setInterval(updateTimer, 1000); 
 } 
@@ -322,5 +321,63 @@ function resetValues() {
   restart_btn.style.display = "none"; 
   cpm_group.style.display = "none"; 
   wpm_group.style.display = "none"; 
+}
+```
+
+
+### 2.8、更新计时器
+>updateTimer()定义一个函数，该函数将美妙调用一次跟踪时间。次函数处理以下的事情：
+>1、更新时间值会更新：所有跟踪时间的变量。该timeLeft值减小，该timeElapsed值增大，并且计时器文本更新为当前剩余时间。
+>2、完成游戏：达到时间限制时将触发此部分。它调用finishGame()下面定义的函数，从而完成游戏
+
+```javascript
+
+function updateTimer() { 
+  if (timeLeft > 0) { 
+    timeLeft--; 
+  
+    timeElapsed++; 
+  
+    timer_text.textContent = timeLeft + "s"; 
+  } 
+  else { 
+    finishGame(); 
+  } 
+} 
+```
+
+### 2.9、重整游戏
+>finishGame()定义一个功能，当必须完成游戏时将调用该功能：
+>1、删除计时器：删除之前创建的计时器实例
+>2、显示重新启动游戏的文本和按钮：显示给用户的引用文本将更改为表示游戏结束的文本。通过将显示属性设置为“阻止,还可以显示”重新启动“按钮
+>3、计算当前会话的CPM和WPM：
+>（1）、每分钟字符数（CMP）通过将键入的字符总数除以经过的时间，然后将结果乘以60来计算，四舍五入以防止小数点过多。
+>（2）、每分钟数字（WPM）的计算方法是将CPM除以5，然后将结果乘以60,5表示每个字的平均字符数。四舍五入防止出现小数点。
+
+```javascript
+function finishGame() { 
+  // stop the timer 
+  clearInterval(timer); 
+
+  // disable the input area 
+  input_area.disabled = true; 
+
+  // show finishing text 
+  quote_text.textContent = "Click on restart to start a new game."; 
+
+  // display restart button 
+  restart_btn.style.display = "block"; 
+
+  // calculate cpm and wpm 
+  cpm = Math.round(((characterTyped / timeElapsed) * 60)); 
+  wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60)); 
+
+  // update cpm and wpm text 
+  cpm_text.textContent = cpm; 
+  wpm_text.textContent = wpm; 
+
+  // display the cpm and wpm 
+  cpm_group.style.display = "block"; 
+  wpm_group.style.display = "block"; 
 }
 ```

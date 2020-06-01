@@ -84,15 +84,72 @@ function processCurrentText() {
 
     accuracy_text.textContent = Math.round(accuracyVal);
 
-    if (curr_input.length == current_quote.length){
+    if (curr_input.length === current_quote.length) {
         updateQuote();
-        total_errors+=errors;
-        input_area.value="";
+        total_errors += errors;
+        input_area.value = "";
     }
 
 }
 
+function startGame() {
+    // 重置所有的数据
+    resetValues();
+    // 更新文本
+    updateQuote();
+    clearInterval(timer);
+    timer = setInterval(updateTimer, 1000);
+
+}
+
+function resetValues() {
+    timeLeft = TIME_LIMIT;
+    timeElapsed = 0;
+    errors = 0;
+    total_errors = 0;
+    accuracy = 0;
+    characterTyped = 0;
+    quoteNo = 0;
+    input_area.disabled = false;
+
+    input_area.value = "";
+    quote_text.textContent = "点击下面区域开始游戏";
+    accuracy_text.textContent = 100;
+    timer_text.textContent = timeLeft + 's';
+    error_text.textContent = 0;
+    restart_btn.style.disabled = "none";
+    cpm_group.style.disabled = "none";
+    wpm_group.style.disabled = "none";
+}
 
 
+function updateTimer() {
+    if (timeLeft > 0) {
+        // 减少剩余时间
+        timeLeft--;
+        // 增加使用时间
+        timeElapsed++
+        timer_text.textContent = timeLeft + "s";
+    } else {
+        finishGame();
+    }
+}
+
+function finishGame() {
+    clearInterval(timer);
+    input_area.disabled = true;
+
+    quote_text.textContent = "点击下面区域重新开始游戏";
+
+    restart_btn.style.disabled = "block";
+    cpm = Math.round(((characterTyped / timeElapsed) * 60));
+    wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60));
+
+    cpm_text.textContent = cpm;
+    wpm_text.textContent = wpm;
+
+    cpm_group.style.disabled = "block";
+    wpm_group.style.disabled = "block";
 
 
+}
