@@ -284,3 +284,43 @@ function processCurrentText() {
   } 
 }
 ```
+
+### 2.7、开始游戏功能
+>startGame()定义了一个函数，当用户将焦点放在输入框上时将调用该函数。因此，它与confocus输入框的事件处理程序一起使用。
+>处理的事情：
+>1、重置所有值：再开始新游戏之前，所有值都将重置为其默认值。我们创建一个函数：restValues()来处理此问题。
+>2、更新文本：准备新的文本并通过调用该updateQuote()函数来显示它
+>3、创建一个新计时器：计时器会跟踪剩余的秒数并将其显示给用户，它是使用setInterval()重复调用
+>uodatetimer（）下面定义的函数的方法创建的。在创建计时器之前，使用清除先前的计时器实例clearInter().
+
+```javascript
+function startGame() { 
+
+  resetValues(); 
+  updateQuote(); 
+
+  // clear old and start a new timer 
+  clearInterval(timer); 
+  timer = setInterval(updateTimer, 1000); 
+} 
+
+function resetValues() { 
+  timeLeft = TIME_LIMIT; 
+  timeElapsed = 0; 
+  errors = 0; 
+  total_errors = 0; 
+  accuracy = 0; 
+  characterTyped = 0; 
+  quoteNo = 0; 
+  input_area.disabled = false; 
+
+  input_area.value = ""; 
+  quote_text.textContent = 'Click on the area below to start the game.'; 
+  accuracy_text.textContent = 100; 
+  timer_text.textContent = timeLeft + 's'; 
+  error_text.textContent = 0; 
+  restart_btn.style.display = "none"; 
+  cpm_group.style.display = "none"; 
+  wpm_group.style.display = "none"; 
+}
+```

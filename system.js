@@ -39,17 +39,60 @@ let timer = null;
 function updateQuote() {
     quote_text.textContent = null;
     current_quote = quotes_array[quoteNo];
-
     current_quote.slice('').forEach(char => {
         const charSpan = document.createElement("span");
         charSpan.innerText = char;
         quote_text.appendChild(charSpan);
     });
 
-    if(quoteNo < quotes_array.Learning-1){
+    if (quoteNo < quotes_array.Learning - 1) {
         quoteNo++;
-    }else{
+    } else {
         quoteNo = 0;
+    }
+}
+
+function processCurrentText() {
+
+    curr_input = input_area.value;
+    curr_input_array = curr_input.split('');
+
+    characterTyped++;
+
+    errors = 0;
+    quoteSpanArray = quote_text.querySelectorAll('span');
+    quoteSpanArray.forEach((char, index) => {
+        let typedChar = curr_input_array[index];
+        if (typedChar == null) {
+            char.classList.remove('correct_char');
+            char.classList.remove('incorrect_char');
+        } else if (typedChar === char.innerText) {
+            char.classList.add('correct_char');
+            char.classList.remove('incorrect_char');
+        } else {
+            char.classList.add('incorrect_char');
+            char.classList.remove('correct_char');
+            errors++;
+        }
+    });
+    // 更新当前输入错误的数量
+    error_text.textContent = total_errors + errors;
+    // 计算当前的准确率
+    // characterTyped为当前训练字符串的总字符数
+    let correctCharacters = (characterTyped - (total_errors + errors));
+    let accuracyVal = ((correctCharacters / characterTyped) * 100)
+
+    accuracy_text.textContent = Math.round(accuracyVal);
+
+    if (curr_input.length == current_quote.length){
+        updateQuote();
+        total_errors+=errors;
+        input_area.value="";
     }
 
 }
+
+
+
+
+
