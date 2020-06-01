@@ -70,7 +70,7 @@
    </div>
    
    <!--引入JS文件-->
-   <script scr="game.js"></script>
+   <script src="game.js"></script>
    </body>
    </html>
 ```
@@ -181,14 +181,14 @@
 let TIME_LIMIT = 60;
 
 // 定义quote被使用
-let quotes_array = [ 
-  "Push yourself, because no one else is going to do it for you.", 
-  "Failure is the condiment that gives success its flavor.", 
-  "Wake up with determination. Go to bed with satisfaction.", 
-  "It's going to be hard, but hard does not mean impossible.", 
-  "Learning never exhausts the mind.", 
-  "The only way to do great work is to love what you do."
-]; 
+let quotes_array = [
+    "Push yourself, because no one else is going to do it for you.",
+    "Failure is the condiment that gives success its flavor.",
+    "Wake up with determination. Go to bed with satisfaction.",
+    "It's going to be hard, but hard does not mean impossible.",
+    "Learning never exhausts the mind.",
+    "The only way to do great work is to love what you do."
+];
 
 // 选择所需要的元素进行命名
 let timer_text = document.querySelector(".curr_time");
@@ -201,17 +201,24 @@ let input_area = document.querySelector(".input_area");
 let restart_btn = document.querySelector(".restart_btn");
 let cpm_group = document.querySelector(".cpm");
 let wpm_group = document.querySelector(".wpm");
-let error_group = document.querySelector(".errors");
-let accuracy_group = document.querySelector(".accuracy");
 
+// 设置系统中需要的一些全局变量
+// 一次游戏所需时间
 let timeLeft = TIME_LIMIT;
+// 游戏时使用的时间
 let timeElapsed = 0;
 let total_errors = 0;
+// 当前的错误次数
 let errors = 0;
+// 当前的准确率
 let accuracy = 0;
+// 键入字符总数
 let characterTyped = 0;
-let curr_quote = "";
+// 未开始时quote中的文本
+let current_quote = "";
+// 计数quotes_array数组中的Index
 let quoteNo = 0;
+// 计时器
 let timer = null;
 ```
 ### 2.5、准备显示的文本
@@ -220,23 +227,26 @@ let timer = null;
 >1、获取文本：引号已用作必须输入文本游戏。每个引用都是从预定义数组中一个接一个地获取的。变量会跟踪当前的报价索引，并在每次请求新的报价时对其进行递增。
 >2、将字符拆分为元素：文本中的每个字符都分为一系列<span>元素。这使得可以根据用户是否正确键入了每个字符来分别更改其颜色。这些元素被附加到变量中quote_text。
 ```javascript
+
 function updateQuote() {
-       quote_text.textContent = null;
-       current_quote = quotes_array[quoteNo];
-   
-       current_quote.slice('').forEach(char => {
-           const charSpan = document.createElement("span");
-           charSpan.innerText = char;
-           quote_text.appendChild(charSpan);
-       });
-   
-       if(quoteNo < quotes_array.Learning-1){
-           quoteNo++;
-       }else{
-           quoteNo = 0;
-       }
-   
-   }
+    // 首先将显示文本设置为null
+    quote_text.textContent = null;
+    // 重新获取显示文本
+    current_quote = quotes_array[quoteNo];
+    // 为获取的文本，进行‘’分隔,并将每个字符设置一个span元素
+    current_quote.split('').forEach(char => {
+        const charSpan = document.createElement("span");
+        charSpan.innerText = char;
+        // 并将相应的字符插入到显示文本中
+        quote_text.appendChild(charSpan);
+    });
+
+    if (quoteNo < quotes_array.length - 1) {
+        quoteNo++;
+    } else {
+        quoteNo = 0;
+    }
+}
 ```
 ### 2.6、由用户获取当前输入的文本
 >processCurrentText()定义了一个函数，只要用户在输入框中输入或更改任何内容，<br>就会调用该函数。因此，它与oninput输入框的事件处理程序一起使用。此函数处理以下事情：
@@ -246,42 +256,48 @@ function updateQuote() {
 >3、计算错误和准确性：每次用户在输入过程中输入错误时，errors变量都会递增。这用于通过将正确键入的字符数除以用户键入的字符总数来计算精度值
 >4、移至下一个引号：当输入文本的长度与引号文本长度匹配时，将updateQuote()调用该函数，该函数将更改引号并清除输入区域。总错误数也将更新以用于下一个报价。
 ```javascript
-function processCurrentText() { 
-  curr_input = input_area.value; 
-  curr_input_array = curr_input.split(''); 
+function processCurrentText() {
 
-  characterTyped++; 
+    let curr_input = input_area.value;
+    let curr_input_array = curr_input.split('');
+    // 增加键入的字符总数
+    characterTyped++;
 
-  errors = 0; 
+    errors = 0;
+    quoteSpanArray = quote_text.querySelectorAll('span');
+    quoteSpanArray.forEach((char, index) => {
+        let typedChar = curr_input_array[index];
+        if (typedChar == null) {
+            char.classList.remove('correct_char');
+            char.classList.remove('incorrect_char');
 
-  quoteSpanArray = quote_text.querySelectorAll('span'); 
-  quoteSpanArray.forEach((char, index) => { 
-    let typedChar = curr_input_array[index] 
-    if (typedChar == null) { 
-      char.classList.remove('correct_char'); 
-      char.classList.remove('incorrect_char'); 
-    } else if (typedChar === char.innerText) { 
-      char.classList.add('correct_char'); 
-      char.classList.remove('incorrect_char'); 
-    } else { 
-      char.classList.add('incorrect_char'); 
-      char.classList.remove('correct_char'); 
-      errors++; 
-    } 
-  }); 
+        } else if (typedChar === char.innerText) {
+            char.classList.add('correct_char');
+            char.classList.remove('incorrect_char');
 
-  error_text.textContent = total_errors + errors; 
+        } else {
+            char.classList.add('incorrect_char');
+            char.classList.remove('correct_char');
+            // 增加错误数
+            errors++;
+        }
+    });
+    // 更新当前输入错误的数量
+    error_text.textContent = total_errors + errors;
+    // 计算当前的准确率
+    // characterTyped为当前训练字符串的总字符数
+    let correctCharacters = (characterTyped - (total_errors + errors));
+    let accuracyVal = ((correctCharacters / characterTyped) * 100);
 
-  let correctCharacters = (characterTyped - (total_errors + errors)); 
-  let accuracyVal = ((correctCharacters / characterTyped) * 100); 
-  accuracy_text.textContent = Math.round(accuracyVal); 
+    accuracy_text.textContent = Math.round(accuracyVal);
 
+    if (curr_input.length === current_quote.length) {
+        updateQuote();
+        total_errors += errors;
 
-  if (curr_input.length == current_quote.length) { 
-    updateQuote(); 
-    total_errors += errors; 
-    input_area.value = ""; 
-  } 
+        input_area.value = "";
+    }
+
 }
 ```
 
@@ -294,33 +310,32 @@ function processCurrentText() {
 >uodatetimer（）下面定义的函数的方法创建的。在创建计时器之前，使用清除先前的计时器实例clearInter().
 
 ```javascript
-function startGame() { 
+function startGame() {
+    // 重置所有的数据
+    resetValues();
+    updateQuote();  // 更新文本
+    clearInterval(timer);
+    timer = setInterval(updateTimer, 1000);
+}
 
-  resetValues(); 
-  updateQuote(); 
+function resetValues() {
+    timeLeft = TIME_LIMIT;
+    timeElapsed = 0;
+    errors = 0;
+    total_errors = 0;
+    accuracy = 0;
+    characterTyped = 0;
+    quoteNo = 0;
+    input_area.disabled = false;
 
-  clearInterval(timer); 
-  timer = setInterval(updateTimer, 1000); 
-} 
-
-function resetValues() { 
-  timeLeft = TIME_LIMIT; 
-  timeElapsed = 0; 
-  errors = 0; 
-  total_errors = 0; 
-  accuracy = 0; 
-  characterTyped = 0; 
-  quoteNo = 0; 
-  input_area.disabled = false; 
-
-  input_area.value = ""; 
-  quote_text.textContent = 'Click on the area below to start the game.'; 
-  accuracy_text.textContent = 100; 
-  timer_text.textContent = timeLeft + 's'; 
-  error_text.textContent = 0; 
-  restart_btn.style.display = "none"; 
-  cpm_group.style.display = "none"; 
-  wpm_group.style.display = "none"; 
+    input_area.value = "";
+    quote_text.textContent = "点击下面区域开始游戏";
+    accuracy_text.textContent = 100;
+    timer_text.textContent = timeLeft + 's';
+    error_text.textContent = 0;
+    restart_btn.style.display = "none";
+    cpm_group.style.display = "none";
+    wpm_group.style.display = "none";
 }
 ```
 
@@ -332,18 +347,17 @@ function resetValues() {
 
 ```javascript
 
-function updateTimer() { 
-  if (timeLeft > 0) { 
-    timeLeft--; 
-  
-    timeElapsed++; 
-  
-    timer_text.textContent = timeLeft + "s"; 
-  } 
-  else { 
-    finishGame(); 
-  } 
-} 
+function updateTimer() {
+    if (timeLeft > 0) {
+        // 减少剩余时间
+        timeLeft--;
+        // 增加使用时间
+        timeElapsed++
+        timer_text.textContent = timeLeft + "s";
+    } else {
+        finishGame();
+    }
+}
 ```
 
 ### 2.9、重整游戏
@@ -355,29 +369,26 @@ function updateTimer() {
 >（2）、每分钟数字（WPM）的计算方法是将CPM除以5，然后将结果乘以60,5表示每个字的平均字符数。四舍五入防止出现小数点。
 
 ```javascript
-function finishGame() { 
-  // stop the timer 
-  clearInterval(timer); 
+function finishGame() {
 
-  // disable the input area 
-  input_area.disabled = true; 
+    clearInterval(timer);
+    // 隐藏启动按钮
+    input_area.disabled = true;
+    quote_text.textContent = "点击重新启动开始新游戏";
 
-  // show finishing text 
-  quote_text.textContent = "Click on restart to start a new game."; 
 
-  // display restart button 
-  restart_btn.style.display = "block"; 
+    restart_btn.style.display = "block";
 
-  // calculate cpm and wpm 
-  cpm = Math.round(((characterTyped / timeElapsed) * 60)); 
-  wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60)); 
+    // calculate cpm and wpm
+    cpm = Math.round(((characterTyped / timeElapsed) * 60));
+    wpm = Math.round((((characterTyped / 5) / timeElapsed) * 60));
 
-  // update cpm and wpm text 
-  cpm_text.textContent = cpm; 
-  wpm_text.textContent = wpm; 
+    // update cpm and wpm text
+    cpm_text.textContent = cpm;
+    wpm_text.textContent = wpm;
 
-  // display the cpm and wpm 
-  cpm_group.style.display = "block"; 
-  wpm_group.style.display = "block"; 
+    // display the cpm and wpm
+    cpm_group.style.display = "block";
+    wpm_group.style.display = "block";
 }
 ```

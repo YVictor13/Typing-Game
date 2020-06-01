@@ -48,10 +48,11 @@
     <!--    显示当前输入的文本，以及作为打字区域-->
     <textarea class="input_area" placeholder="在这里开始打字..." oninput="processCurrentText()"
               onfocus="startGame()"></textarea>
-    <button class="restart_btn" onclick="startGame()">重新开始</button>
+    <button class="restart_btn" onclick="resetValues()">重新开始</button>
+
 </div>
 
 <!--引入JS文件-->
-<script scr="system.js"></script>
+<script src="system.js"></script>
 </body>
 </html>
